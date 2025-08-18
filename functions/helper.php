@@ -1,7 +1,7 @@
 <?php 
 
 // config
-define("BASE_URL", 'localhost/php_project');
+define("BASE_URL", 'http://localhost/php-project');
 
 // Helpers AKA Hooks
 function redirect($url)
@@ -10,7 +10,7 @@ function redirect($url)
     exit;
 }
 
-function asset($files)
+function assets($files)
 {
     return trim(BASE_URL, "/ ") . "/" . trim($files, "/ ");
 }
