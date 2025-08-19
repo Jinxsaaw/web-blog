@@ -43,7 +43,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category_name']) && !e
                     <form action="create.php" method="post">
                         <section class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" class="form-control" name="category_name" id="name" placeholder="name ...">
+                            <input type="text" class="form-control" name="category_name" id="name" value="<?= isset($_POST['category_name']) ? htmlspecialchars($_POST['category_name']) : '' ?>" placeholder="name ..." required>
                         </section>
                         <section class="form-group">
                             <button type="submit" class="btn btn-primary">Create</button>

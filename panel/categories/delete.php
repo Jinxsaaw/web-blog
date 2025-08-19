@@ -5,9 +5,8 @@ require_once '../../functions/pdo_connection.php';
 GLOBAL $pdo;
 if($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['cat_id']) && !empty($_GET['cat_id']))
 {
-    $query = "DELETE FROM web_blog.categories WHERE category_id = :category_id";
-    $statement = $pdo->prepare($query);
-    $statement->execute([
+    $query = $pdo->prepare("DELETE FROM web_blog.categories WHERE category_id = :category_id");
+    $query->execute([
         'category_id' => $_GET['cat_id']
     ]);
 }

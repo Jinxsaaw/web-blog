@@ -51,7 +51,7 @@ GLOBAL $pdo;
                                 <td><?= $category->category_id ?></td>
                                 <td><?= $category->category_name ?></td>
                                 <td>
-                                    <a href="" class="btn btn-info btn-sm">Edit</a>
+                                    <a href="<?= url('panel/categories/edit.php?cat_id=' . $category->category_id) ?>" class="btn btn-info btn-sm">Edit</a>
                                     <a href="<?= url('panel/categories/delete.php?cat_id=' . $category->category_id) ?>" class="btn btn-danger btn-sm">Delete</a>
                                 </td>
                             </tr>
