@@ -6,6 +6,6 @@
         <a href="<?= url('panel/categories') ?>">Categories</a>
     </section>
     <section class="sidebar-link">
-        <a href="<?= url('panel/post') ?>">Post</a>
+        <a href="<?= url('panel/posts') ?>">Posts</a>
     </section>
 </section>

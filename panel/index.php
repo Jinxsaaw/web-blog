@@ -14,8 +14,7 @@ require_once '../functions/hooks.php';
 <section id="app">
 
     <?php require_once 'layouts/top-nav.php'; ?>
-
-
+    
     <section class="container-fluid">
         <section class="row">
             <section class="col-md-2 p-0">
