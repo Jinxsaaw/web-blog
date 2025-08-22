@@ -79,7 +79,7 @@ if(isset($_POST['title']) && !empty($_POST['title']) && isset($_POST['body']) &&
                         </section>
                         <section class="form-group">
                             <label for="image">Image</label>
-                            <input type="file" class="form-control" name="image" id="image" value="<?= $post->post_image ?>">
+                            <input type="file" class="form-control" name="image" id="image" >
                         </section>
                         <section class="form-group">
                             <label for="cat_id">Category</label>
