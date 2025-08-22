@@ -7,7 +7,7 @@ require_once '../../functions/pdo_connection.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Posts' Panel</title>
+    <title>Posts Panel</title>
     <link rel="stylesheet" href="<?= assets('assets/css/bootstrap.min.css') ?>" media="all" type="text/css">
     <link rel="stylesheet" href="<?= assets('assets/css/style.css') ?>" media="all" type="text/css">
 </head>
@@ -62,9 +62,9 @@ require_once '../../functions/pdo_connection.php';
                                     <?php } ?>
                                 </td>
                                 <td>
-                                    <a href="" class="btn btn-warning btn-sm">Change status</a>
-                                    <a href="" class="btn btn-info btn-sm">Edit</a>
-                                    <a href="" class="btn btn-danger btn-sm">Delete</a>
+                                    <a href="<?= url('panel/posts/change-status.php?post_id=' . $post->post_id) ?>" class="btn btn-warning btn-sm">Change status</a>
+                                    <a href="<?= url('panel/posts/edit.php?post_id=' . $post->post_id); ?>" class="btn btn-info btn-sm">Edit</a>
+                                    <a href="<?= url('panel/posts/delete.php?post_id=' . $post->post_id); ?>" class="btn btn-danger btn-sm">Delete</a>
                                 </td>
                             </tr>
                             <?php } ?>
