@@ -2,10 +2,11 @@
 require_once '../../functions/hooks.php';
 require_once '../../functions/pdo_connection.php';
 GLOBAL $pdo;
-# The only issue with this code is that it doesn't show the already uploaded image but it will keep the old image if nothing is uploaded!
-if(isset($_GET['post_id']) && !empty($_GET['post_id']))
+
+# Fetch the existing post data and checking if the post_id is valid
+if ( isset($_GET['post_id']) && !empty($_GET['post_id']) )
 {
-    $query = $pdo->prepare("SELECT web_blog.p.*, web_blog.c.category_name AS cn FROM web_blog.posts p LEFT JOIN web_blog.categories c ON web_blog.p.category_id = web_blog.c.category_id WHERE web_blog.p.post_id = :post_id");
+    $query = $pdo->prepare("SELECT * FROM web_blog.posts WHERE post_id = :post_id");
     $query->execute(['post_id' => $_GET['post_id']]);
     $post = $query->fetch();
 }
@@ -13,13 +14,26 @@ else
 {
     redirect('panel/posts');
 }
-if(!$post) {
+if( !$post ) {
     redirect('panel/posts');
 }
 
-if(isset($_POST['title']) && !empty($_POST['title']) && isset($_POST['body']) && !empty($_POST['body']) && isset($_POST['cat_id']) && !empty($_POST['cat_id']) && isset($_GET['post_id']) && !empty($_GET['post_id']) && $post)
-{
+# Handling the form submission and updating the post
+if  (
+    isset($_POST['title']) && !empty($_POST['title']) && 
+    isset($_POST['body']) && !empty($_POST['body']) && 
+    isset($_POST['cat_id']) && !empty($_POST['cat_id']) && 
+    isset($_GET['post_id']) && !empty($_GET['post_id']) && 
+    $post
+    )
+    {
+    
+    #checking if the category exists
+    $query = $pdo->prepare("SELECT * FROM categories WHERE category_id = :cat_id;");
+    $query->execute(['cat_id' => $_POST['cat_id']]);
+    $category = $query->fetch();
 
+    #Checking if new image is uploaded
     if(isset($_FILES['image']) && $_FILES['image']['error'] == 0)
     {
         $allowed_extentions = ['jpg', 'jpeg', 'png', 'gif'];
@@ -30,6 +44,12 @@ if(isset($_POST['title']) && !empty($_POST['title']) && isset($_POST['body']) &&
             redirect('panel/posts/edit.php?post_id=' . $_GET['post_id'] . '&error=invalid_image');
         }
         $base_path = dirname(__DIR__, 2);
+
+        # Deleting the old image file if it exists
+        if(file_exists($base_path . $post->post_image))
+        {
+            unlink($base_path . $post->post_image);
+        }
         $image_path = '/assets/images/posts/' . date('Y_m_d_H_i_s_') . $image['name'];
         move_uploaded_file($image['tmp_name'], $base_path . $image_path);
     }
@@ -37,15 +57,24 @@ if(isset($_POST['title']) && !empty($_POST['title']) && isset($_POST['body']) &&
     {
         $image_path = $post->post_image; // Keep the old image if no new one is uploaded
     }
-    $query = $pdo->prepare("UPDATE web_blog.posts SET post_title = :title, post_body = :body, post_image = :image, category_id = :cat_id WHERE post_id = :post_id;");
-    $query->execute([
-        'title' => $_POST['title'],
-        'body' => $_POST['body'],
-        'image' => $image_path,
-        'cat_id' => $_POST['cat_id'],
-        'post_id' => $_GET['post_id']
-    ]);
-    redirect('panel/posts');
+
+    if ( $category )
+    {
+        $query = $pdo->prepare("UPDATE web_blog.posts SET post_title = :title, post_body = :body, post_image = :image, category_id = :cat_id WHERE post_id = :post_id;");
+        $query->execute([
+            'title' => $_POST['title'],
+            'body' => $_POST['body'],
+            'image' => $image_path,
+            'cat_id' => $_POST['cat_id'],
+            'post_id' => $_GET['post_id']
+        ]);
+        redirect('panel/posts');
+
+    }
+    else
+    {
+        redirect('panel/posts/edit.php?post_id=' . $_GET['post_id'] . '&error=invalid_category');
+    }
 }
 
 
@@ -80,6 +109,7 @@ if(isset($_POST['title']) && !empty($_POST['title']) && isset($_POST['body']) &&
                         <section class="form-group">
                             <label for="image">Image</label>
                             <input type="file" class="form-control" name="image" id="image" >
+                            <img src="<?= assets($post->post_image); ?>" class="mt-3 ml-2" height="200" width="200" alt="">
                         </section>
                         <section class="form-group">
                             <label for="cat_id">Category</label>
@@ -90,19 +120,9 @@ if(isset($_POST['title']) && !empty($_POST['title']) && isset($_POST['body']) &&
                                 $categories = $query->fetchAll();
                                 foreach($categories as $category)
                                 {
-                                    if($category->category_id == $post->category_id)
-                                    {
-                                        ?>
-                                        <option value="<?= $category->category_id ?>" selected><?= $category->category_name ?></option>
-                                        <?php
-                                    }
-                                
-                                else
-                                {
                                 ?>
-                                <option value="<?= $category->category_id ?>"><?= $category->category_name ?></option>
+                                <option value="<?= $category->category_id ?>" <?php if( $category->category_id == $post->category_id) {echo 'selected';} ?>><?= $category->category_name ?></option>
                                 <?php
-                                }
                                 }
                                 ?>
                             </select>
