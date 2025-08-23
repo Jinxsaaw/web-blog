@@ -16,6 +16,11 @@ if($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['post_id']) && !empty($_G
     }
     else
     {
+        $basePath = dirname(__DIR__, 2);
+        if ( file_exists($basePath . $post->post_image) )
+        {
+            unlink($basePath . $post->post_image); // Delete the image file
+        }
         $query = $pdo->prepare("DELETE FROM posts WHERE post_id = :post_id");
         $query->execute(['post_id' => $_GET['post_id']]);
         redirect('panel/posts');

@@ -22,10 +22,9 @@ if($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['post_id']) && !empty($_G
                 'post_id' => $_GET['post_id']
             ]
         );
-        redirect('panel/posts');
     }
 }
-
+redirect('panel/posts');
 
 
 
