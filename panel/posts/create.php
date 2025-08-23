@@ -2,6 +2,7 @@
 require_once '../../functions/hooks.php';
 require_once '../../functions/pdo_connection.php';
 GLOBAL $pdo;
+// This doesn't work! Need to find and fix the bug!
 if (
     isset($_POST['cat_id']) && !empty($_POST['cat_id'])
     && isset($_POST['title']) && !empty($_POST['title'])
@@ -23,6 +24,10 @@ if (
 		$image_path = '/assets/images/posts/' . pathinfo($image['name'], PATHINFO_FILENAME) . '_' . date("Y_m_d_H_i") . '.' . $image_mime;
 		move_uploaded_file($image['tmp_name'], $base_path . $image_path);
 	}
+    else
+    {
+        $image_path = NULL;
+    }
 	$query = $pdo->prepare("INSERT INTO web_blog.posts (post_title, post_body, post_image, category_id) VALUES (:title, :body, :image, :cat_id);");
 	$query->execute(['title' => $post_title, 'body' => $post_body, 'image' => $image_path, 'cat_id' => $cat_id]);
 	redirect('/panel/posts');
