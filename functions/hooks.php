@@ -1,4 +1,8 @@
 <?php 
+if (!defined('APP_GAURD'))
+{
+    die('Direct access is forbidden!');
+}
 
 // config
 define("DOMAIN", 'http://localhost/web-blog');

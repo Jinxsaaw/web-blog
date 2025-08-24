@@ -1,3 +1,9 @@
+<?php
+if (!defined('APP_GAURD'))
+{
+    die('Direct access is forbidden!');
+}
+?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-red">
     <a class="navbar-brand" href="">Admin panel</a>
     <section class="collapse navbar-collapse" id="navbarSupportedContent"></section>

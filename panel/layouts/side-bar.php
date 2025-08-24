@@ -1,3 +1,9 @@
+<?php
+if (!defined('APP_GAURD'))
+{
+    die('Direct access is forbidden!');
+}
+?>
 <section class="sidebar">
     <section class="sidebar-link">
         <a href="<?= url('panel') ?>">Panel</a>

@@ -1,4 +1,5 @@
 <?php
+define('APP_GUARD', true);
 require_once '../functions/hooks.php';
 require_once '../functions/pdo_connection.php';
 #later make an assoc array for all different errors and write the warning under the input inside small tag!;
