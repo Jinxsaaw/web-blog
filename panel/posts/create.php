@@ -1,6 +1,7 @@
 <?php
 require_once '../../functions/hooks.php';
 require_once '../../functions/pdo_connection.php';
+require_once '../../functions/check-session.php';
 GLOBAL $pdo;
 // This doesn't work! Need to find and fix the bug!
 if (

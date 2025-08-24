@@ -1,4 +1,5 @@
 <?php
+require_once '../../functions/check-session.php';
 require_once '../../functions/hooks.php';
 require_once '../../functions/pdo_connection.php';
 

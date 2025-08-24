@@ -1,5 +1,6 @@
 <?php
 require_once '../functions/hooks.php';
+require_once '../functions/check-session.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
