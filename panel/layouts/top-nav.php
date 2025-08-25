@@ -1,11 +1,11 @@
 <?php
-if (!defined('APP_GAURD'))
+if (!defined('APP_GUARD'))
 {
     die('Direct access is forbidden!');
 }
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-red">
-    <a class="navbar-brand" href="">Admin panel</a>
+    <a class="navbar-brand" href="<?= url('') ?>">Home Page</a>
     <section class="collapse navbar-collapse" id="navbarSupportedContent"></section>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

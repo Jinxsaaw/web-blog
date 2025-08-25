@@ -1,4 +1,5 @@
 <?php
+#fix the bug in image upload and post creation for bytes exceeding limit
 define('APP_GUARD', true);
 require_once '../../functions/hooks.php';
 require_once '../../functions/pdo_connection.php';

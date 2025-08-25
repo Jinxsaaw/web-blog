@@ -6,23 +6,23 @@ require_once '../functions/pdo_connection.php';
 $error = '';
 $errors = [];
 GLOBAL $pdo;
-if( empty($_POST['email']) )
+if( empty($_POST['email']) && isset($_POST['email']) )
 {
     array_push($errors, 'Email is required!');
 }
-if( empty($_POST['first_name']) )
+if( empty($_POST['first_name']) && isset($_POST['first_name']) )
 {
     array_push($errors, 'First name is required!');
 }
-if( empty($_POST['last_name']) )
+if( empty($_POST['last_name']) && isset($_POST['last_name']) )
 {
     array_push($errors, 'Last name is required!');
 }
-if( empty($_POST['password']) )
+if( empty($_POST['password']) && isset($_POST['password']) )
 {
     array_push($errors, 'Password is required!');
 }
-if( empty($_POST['confirm']) )
+if( empty($_POST['confirm']) && isset($_POST['confirm']) )
 {
     array_push($errors, 'Confirming your password is required!');
 }

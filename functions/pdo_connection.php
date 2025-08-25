@@ -1,5 +1,5 @@
 <?php
-if (!defined('APP_GAURD'))
+if (!defined('APP_GUARD'))
 {
     die('Direct access is forbidden!');
 }

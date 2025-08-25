@@ -1,4 +1,5 @@
 <?php
+#later create a top-nav to go to home page
 define('APP_GUARD', true);
 session_start();
 require_once '../functions/hooks.php';
@@ -6,17 +7,17 @@ require_once '../functions/pdo_connection.php';
 GLOBAL $pdo;
 $error = '';
 $errors = [];
-if ( empty($_POST['email']) && empty($_POST['password']) )
+if ( empty($_POST['email']) && empty($_POST['password']) && isset($_POST['email'], $_POST['password']) )
 {
     array_push($errors, 'Please fill in all the fields!');
 }
 else
 {
-    if ( empty($_POST['email']) )
+    if ( empty($_POST['email'])  && isset($_POST['email']) )
     {
         array_push($errors, 'Email is required!');
     }
-    if ( empty($_POST['password']) )
+    if ( empty($_POST['password'])  && isset($_POST['password']) )
     {
         array_push($errors, 'Password is required!');
     }
@@ -69,6 +70,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
 
 <body>
     <section id="app">
+        <?php require_once '../layouts/top-nav.php' ?>
 
         <section style="height: 100vh; background-color: #138496;" class="d-flex justify-content-center align-items-center">
             <section style="width: 20rem;">
@@ -81,7 +83,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
                     </section>
                     <section class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" class="form-control" name="password" id="password" placeholder="password ...">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="password ..." value="<?= isset($_POST['password']) ? $_POST['password'] : '' ?>">
                     </section>
                     <section class="mt-4 mb-2 d-flex justify-content-between">
                         <input type="submit" class="btn btn-success btn-sm" value="login">
