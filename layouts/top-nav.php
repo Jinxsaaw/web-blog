@@ -20,13 +20,13 @@ if (!defined('APP_GUARD'))
                 <a class="nav-link " href="<?= url('') ?>">Home <span class="sr-only ">(current)</span></a>
             </li>
             <?php
-                $query = $pdo->prepare("SELECT * FROM categories");
-                $query->execute();
-                $categories = $query->fetchAll();
-                foreach ($categories as $category):
+                $query_cat_nav = $pdo->prepare("SELECT * FROM categories");
+                $query_cat_nav->execute();
+                $nav_categories = $query_cat_nav->fetchAll();
+                foreach ($nav_categories as $nav_category):
             ?>
             <li class="nav-item ">
-                <a class="nav-link " href="<?= url('category.php?cat_id=' . $category->category_id) ?>"><?= $category->category_name ?></a>
+                <a class="nav-link " href="<?= url('category.php?cat_id=' . $nav_category->category_id) ?>"><?= $nav_category->category_name ?></a>
             </li>
             <?php endforeach; ?>
 

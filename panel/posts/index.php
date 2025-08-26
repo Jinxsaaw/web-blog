@@ -9,6 +9,7 @@ require_once '../../functions/pdo_connection.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png+xml" href="<?= assets('assets/images/icons/home.png') ?>" />
     <title>Posts Panel</title>
     <link rel="stylesheet" href="<?= assets('assets/css/bootstrap.min.css') ?>" media="all" type="text/css">
     <link rel="stylesheet" href="<?= assets('assets/css/style.css') ?>" media="all" type="text/css">
@@ -25,7 +26,7 @@ require_once '../../functions/pdo_connection.php';
             <section class="col-md-10 pt-3">
 
                 <section class="mb-2 d-flex justify-content-between align-items-center">
-                    <h2 class="h4">Articles</h2>
+                    <h2 class="h4">Posts</h2>
                     <a href="<?= url('panel/posts/create.php') ?>" class="btn btn-sm btn-success">Create</a>
                 </section>
 
@@ -34,12 +35,12 @@ require_once '../../functions/pdo_connection.php';
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>image</th>
-                            <th>title</th>
-                            <th>category name</th>
-                            <th>body</th>
-                            <th>status</th>
-                            <th>setting</th>
+                            <th>Image</th>
+                            <th>Title</th>
+                            <th>Category Name</th>
+                            <th>Body</th>
+                            <th>Status</th>
+                            <th>Setting</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -64,7 +65,7 @@ require_once '../../functions/pdo_connection.php';
                                     <?php } ?>
                                 </td>
                                 <td>
-                                    <a href="<?= url('panel/posts/change-status.php?post_id=' . $post->post_id) ?>" class="btn btn-warning btn-sm">Change status</a>
+                                    <a href="<?= url('panel/posts/change-status.php?post_id=' . $post->post_id) ?>" class="btn btn-warning btn-sm">Change Status</a>
                                     <a href="<?= url('panel/posts/edit.php?post_id=' . $post->post_id); ?>" class="btn btn-info btn-sm">Edit</a>
                                     <a href="<?= url('panel/posts/delete.php?post_id=' . $post->post_id); ?>" class="btn btn-danger btn-sm">Delete</a>
                                 </td>

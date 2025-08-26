@@ -9,6 +9,7 @@ GLOBAL $pdo;
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/png+xml" href="<?= assets('assets/images/icons/home.png') ?>" />
         <title>Blog Posts</title>
         <link rel="stylesheet" href="<?= assets('assets/css/bootstrap.min.css') ?>" media="all" type="text/css">
         <link rel="stylesheet" href="<?= assets('assets/css/style.css') ?>" media="all" type="text/css">
@@ -19,7 +20,6 @@ GLOBAL $pdo;
             <?php require_once "layouts/top-nav.php"?>
 
             <section class="container my-5">
-                <!-- Example row of columns -->
                 <section class="row">
                     <?php
                         $query = $pdo->prepare("SELECT * FROM posts WHERE post_status = 1 ORDER BY created_at DESC");

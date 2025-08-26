@@ -104,7 +104,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PHP tutorial</title>
+    <link rel="icon" type="image/png+xml" href="<?= assets('assets/images/icons/home.png') ?>" />
+    <title>Sign up</title>
     <link rel="stylesheet" href="<?= assets('assets/css/bootstrap.min.css') ?>" media="all" type="text/css">
     <link rel="stylesheet" href="<?= assets('assets/css/style.css') ?>" media="all" type="text/css">
 </head>
@@ -115,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
 
         <section style="height: 100vh; background-color: #138496;" class="d-flex justify-content-center align-items-center">
             <section style="width: 20rem;">
-                <h1 class="bg-warning rounded-top px-2 mb-0 py-3 h5">PHP Tutorial login</h1>
+                <h1 class="bg-warning rounded-top px-2 mb-0 py-3 h5">Create a New Account</h1>
                 <section class="bg-light my-0 px-2"><small class="text-danger"><?= $error !== '' ?  $error : '' ?></small></section>
                 <form class="pt-3 pb-1 px-2 bg-light rounded-bottom" action="<?= url('/auth/register.php') ?>" method="post">
                     <section class="form-group">
@@ -140,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
                     </section>
                     <section class="mt-4 mb-2 d-flex justify-content-between">
                         <input type="submit" class="btn btn-success btn-sm" value="register">
-                        <a class="" href="">login</a>
+                        <a class="" href="">Sign Up</a>
                     </section>
                 </form>
             </section>

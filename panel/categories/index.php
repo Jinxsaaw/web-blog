@@ -10,6 +10,7 @@ GLOBAL $pdo;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png+xml" href="<?= assets('assets/images/icons/home.png') ?>" />
     <title>Blog Categories</title>
     <link rel="stylesheet" href="<?= assets('assets/css/bootstrap.min.css') ?>" media="all" type="text/css">
     <link rel="stylesheet" href="<?= assets('assets/css/style.css') ?>" media="all" type="text/css">
@@ -36,8 +37,8 @@ GLOBAL $pdo;
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>name</th>
-                                <th>setting</th>
+                                <th>Name</th>
+                                <th>Setting</th>
                             </tr>
                         </thead>
                         <tbody>

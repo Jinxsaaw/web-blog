@@ -12,31 +12,30 @@ if ( isset($_GET['cat_id']) && !empty($_GET['cat_id']) ){
 {
     redirect('');
 }
+if ( isset($_GET['cat_id']) && !empty($_GET['cat_id']) )
+{
+    $cat_id = $_GET['cat_id'];
+    $query = $pdo->prepare("SELECT * FROM categories WHERE category_id = :cat_id");
+    $query->execute(['cat_id' => $cat_id]);
+    $category = $query->fetch();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>PHP tutorial</title>
+        <link rel="icon" type="image/png+xml" href="<?= assets('assets/images/icons/home.png') ?>" />
+        <title><?= $category->category_name ?> Posts</title>
         <link rel="stylesheet" href="<?= assets('assets/css/bootstrap.min.css') ?>" media="all" type="text/css">
         <link rel="stylesheet" href="<?= assets('assets/css/style.css') ?>" media="all" type="text/css">
     </head>
     <body>
         <section id="app"> 
             <?php require_once "layouts/top-nav.php"?>
-
             <section class="container my-5"> 
                 <section class="row">
-                <?php
-                    if ( isset($_GET['cat_id']) && !empty($_GET['cat_id']) )
-                        {
-                        $cat_id = $_GET['cat_id'];
-                        $query = $pdo->prepare("SELECT * FROM categories WHERE category_id = :cat_id");
-                        $query->execute(['cat_id' => $cat_id]);
-                        $category = $query->fetch();
-                        }
-                    ?>
                     <section class="col-12">
                         <h1><?= $category->category_name ?></h1>
                         <hr>

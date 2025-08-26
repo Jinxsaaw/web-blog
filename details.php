@@ -16,6 +16,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['post_id']) && !empty($_
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/png+xml" href="<?= assets('assets/images/icons/home.png') ?>" />
         <title>Post Details</title>
         <link rel="stylesheet" href="<?= assets('assets/css/bootstrap.min.css') ?>" media="all" type="text/css">
         <link rel="stylesheet" href="<?= assets('assets/css/style.css') ?>" media="all" type="text/css">
@@ -25,7 +26,6 @@ if ( $_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['post_id']) && !empty($_
         <?php require_once "layouts/top-nav.php"?>
 
         <section class="container my-5">
-            <!-- Example row of columns -->
             <section class="row">
                 <section class="col-md-12">
                 <?php 

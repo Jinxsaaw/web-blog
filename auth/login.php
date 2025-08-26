@@ -1,7 +1,9 @@
 <?php
 #later create a top-nav to go to home page
 define('APP_GUARD', true);
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once '../functions/hooks.php';
 require_once '../functions/pdo_connection.php';
 GLOBAL $pdo;
@@ -63,6 +65,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png+xml" href="<?= assets('assets/images/icons/home.png') ?>" />
     <title>Admin Login</title>
     <link rel="stylesheet" href="<?= assets('assets/css/bootstrap.min.css') ?>" media="all" type="text/css">
     <link rel="stylesheet" href="<?= assets('assets/css/style.css') ?>" media="all" type="text/css">
@@ -86,8 +89,8 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
                         <input type="password" class="form-control" name="password" id="password" placeholder="password ..." value="<?= isset($_POST['password']) ? $_POST['password'] : '' ?>">
                     </section>
                     <section class="mt-4 mb-2 d-flex justify-content-between">
-                        <input type="submit" class="btn btn-success btn-sm" value="login">
-                        <a class="btn btn-info btn-sm" href="<?= url('auth/register.php') ?>">register</a>
+                        <input type="submit" class="btn btn-success btn-sm" value="Log In">
+                        <a class="btn btn-info btn-sm" href="<?= url('auth/register.php') ?>">Create a New Account</a>
                     </section>
                 </form>
             </section>

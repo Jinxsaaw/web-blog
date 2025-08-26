@@ -10,5 +10,5 @@ if (!defined('APP_GUARD'))
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="text-decoration-none text-white" href="<?= url('auth/logout.php') ?>">logout</a>
+    <a class="text-decoration-none text-white" href="<?= url('auth/logout.php') ?>">Log Out</a>
 </nav>

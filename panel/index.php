@@ -8,6 +8,7 @@ require_once '../functions/check-session.php';
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/png+xml" href="<?= assets('assets/images/icons/home.png') ?>" />
         <title>Admin Panel</title>
         <link rel="stylesheet" href="<?= assets('assets/css/bootstrap.min.css') ?>" media="all" type="text/css">
         <link rel="stylesheet" href="<?= assets('assets/css/style.css') ?>" media="all" type="text/css">
@@ -26,11 +27,13 @@ require_once '../functions/check-session.php';
 
                         <section style="min-height: 80vh;" class="d-flex justify-content-center align-items-center">
                             <section>
-                                <h1>Weblog Dashboard</h1>
+                                <h1>Profile</h1>
                                 <ul class="mt-2 li">
-                                    <li><h3>PDO Connection</h3></li>
-                                    <li><h3>File upload</h3></li>
-                                    <li><h3>Blog (categories and posts)</h3></li>
+                                    <li><h3>About me text area</h3></li>
+                                    <li><h3>Status</h3></li>
+                                    <li><h3>Created at</h3></li>
+                                    <li><h3>Modifed at</h3></li>
+                                    <li><h3>Profile picture</h3></li>
                                 </ul>
                             </section>
                         </section>
