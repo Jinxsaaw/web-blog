@@ -22,18 +22,20 @@ GLOBAL $pdo;
                 <!-- Example row of columns -->
                 <section class="row">
                     <?php
-                        $query = $pdo->prepare("SELECT * FROM posts ORDER BY created_at DESC");
+                        $query = $pdo->prepare("SELECT * FROM posts WHERE post_status = 1 ORDER BY created_at DESC");
                         $query->execute();
                         $posts = $query->fetchAll();
                         if ( $posts ):
                             foreach ($posts as $post):
-                                if( $post->post_status != 1 ) continue;
+                                # In the query we already filtered post_status = 1
+                                # So this check is not necessary but good to know
+                                // if( $post->post_status != 1 ) continue;
                     ?>
                         <section class="col-md-4">
                             <section class="mb-2 overflow-hidden" style="max-height: 15rem;"><img class="img-fluid" src="<?= assets($post->post_image) ?>" alt="<?= $post->post_image ?>"></section>
                             <h2 class="h5 text-truncate"><?= $post->post_title ?></h2>
                             <p><?= substr($post->post_body, 0, 30) ?></p>
-                            <p><a class="btn btn-primary" href="" role="button">View details »</a></p>
+                            <p><a class="btn btn-primary" href="<?= url('details.php?post_id=' . $post->post_id) ?>" role="button">View details »</a></p>
                         </section>
                     <?php   
                             endforeach;

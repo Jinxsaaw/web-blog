@@ -111,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
 
 <body>
     <section id="app">
+        <?php require_once '../layouts/top-nav.php' ?>
 
         <section style="height: 100vh; background-color: #138496;" class="d-flex justify-content-center align-items-center">
             <section style="width: 20rem;">

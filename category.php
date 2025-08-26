@@ -5,7 +5,7 @@ require_once 'functions/pdo_connection.php';
 GLOBAL $pdo;
 if ( isset($_GET['cat_id']) && !empty($_GET['cat_id']) ){
     $cat_id = $_GET['cat_id'];
-    $query = $pdo->prepare("SELECT p.*, c.category_name FROM posts p LEFT JOIN categories c ON p.category_id = c.category_id WHERE p.category_id = :cat_id ORDER BY p.created_at DESC");
+    $query = $pdo->prepare("SELECT * FROM posts WHERE category_id = :cat_id AND post_status = 1 ORDER BY created_at DESC");
     $query->execute(['cat_id' => $cat_id]);
     $posts = $query->fetchAll();
 } else
@@ -27,18 +27,25 @@ if ( isset($_GET['cat_id']) && !empty($_GET['cat_id']) ){
             <?php require_once "layouts/top-nav.php"?>
 
             <section class="container my-5"> 
-                <?php
-                if ( $posts ):
-                    foreach ( $posts as $post):
-                        if( $post->post_status != 1 ) continue;
-                ?>
                 <section class="row">
+                <?php
+                    if ( isset($_GET['cat_id']) && !empty($_GET['cat_id']) )
+                        {
+                        $cat_id = $_GET['cat_id'];
+                        $query = $pdo->prepare("SELECT * FROM categories WHERE category_id = :cat_id");
+                        $query->execute(['cat_id' => $cat_id]);
+                        $category = $query->fetch();
+                        }
+                    ?>
                     <section class="col-12">
-                        <h1><?= $post->category_name ?></h1>
+                        <h1><?= $category->category_name ?></h1>
                         <hr>
                     </section>
                 </section> 
-                <section class="row"> 
+                <section class="row">
+                    <?php
+                        foreach ($posts as $post):
+                    ?>
                     <section class="col-md-4">
                         <section class="mb-2 overflow-hidden" style="max-height: 15rem;">
                             <img class="img-fluid" src="<?= assets($post->post_image); ?>" alt="<?= $post->post_image ?>">
@@ -47,19 +54,21 @@ if ( isset($_GET['cat_id']) && !empty($_GET['cat_id']) ){
                         <p><?= substr($post->post_body, 0, 30) ?></p>
                         <p><a class="btn btn-primary" href="" role="button">View details »</a></p>
                     </section>
+                    <?php
+                       endforeach;
+                    ?>
                 </section> 
                 <?php
-                    endforeach;
-                else:
+                    if ( empty($posts) ):
                 ?>
                 <section class="row">
                         <section class="col-12">
-                            <h1>Category not found!</h1>
+                            <h1>No posts yet for this category!</h1>
                         </section>
-                <?php
-                        endif;
-                ?>
                 </section> 
+                <?php
+                    endif;
+                ?>
             </section>
 
         </section>

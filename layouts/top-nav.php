@@ -1,4 +1,7 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (!defined('APP_GUARD'))
 {
     die('Direct access is forbidden!');
@@ -32,10 +35,18 @@ if (!defined('APP_GUARD'))
 
     <section class="d-inline ">
 
+        <?php
+            if( !isset($_SESSION['user']) ):
+        
+        ?>
         <a class="text-decoration-none text-white px-2 " href="<?= url('auth/register.php') ?>">register</a>
         <a class="text-decoration-none text-white " href="<?= url('auth/login.php') ?>">login</a>
-
+        <?php
+            else:
+        ?>
         <a class="text-decoration-none text-white px-2 " href="<?= url('auth/logout.php') ?>">logout</a>
-
+        <?php
+            endif;
+        ?>
     </section>
 </nav>
