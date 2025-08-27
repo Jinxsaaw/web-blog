@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 if (!defined('APP_GUARD'))
 {
+    redirect('');
     die('Direct access is forbidden!');
 }
 ?>
@@ -39,12 +40,12 @@ if (!defined('APP_GUARD'))
             if( !isset($_SESSION['user']) ):
         
         ?>
-        <a class="text-decoration-none text-white px-2 " href="<?= url('auth/register.php') ?>">register</a>
-        <a class="text-decoration-none text-white " href="<?= url('auth/login.php') ?>">login</a>
+        <a class="text-decoration-none text-white px-2 " href="<?= url('auth/register.php') ?>">Register</a>
+        <a class="text-decoration-none text-white " href="<?= url('auth/login.php') ?>">Log In</a>
         <?php
             else:
         ?>
-        <a class="text-decoration-none text-white px-2 " href="<?= url('auth/logout.php') ?>">logout</a>
+        <a class="text-decoration-none text-white px-2 " href="<?= url('auth/logout.php') ?>">Log Out</a>
         <?php
             endif;
         ?>

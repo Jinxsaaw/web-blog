@@ -105,18 +105,23 @@ if  (
                 <section class="col-md-10 pt-3">
 
                     <form action="<?=  url('panel/posts/edit.php?post_id=') . $post->post_id ?>" method="post" enctype="multipart/form-data">
-                        <section class="form-group">
+                        <section class="form-group row my-3">
+                            <div class="col-auto">
                             <label for="title">Title</label>
                             <input type="text" class="form-control" name="title" id="title" placeholder="title ..." value="<?= $post->post_title ?>">
+                            </div>
                         </section>
-                        <section class="form-group">
+                        <section class="form-group row my-3">
+                            <div class="col-auto">
                             <label for="image">Image</label>
                             <input type="file" class="form-control" name="image" id="image" >
                             <img src="<?= assets($post->post_image); ?>" class="mt-3 ml-2" height="200" width="200" alt="">
+                            </div>
                         </section>
-                        <section class="form-group">
-                            <label for="cat_id">Category</label>
-                            <select class="form-control" name="cat_id" id="cat_id">
+                        <section class="form-group row my-3">
+                            <div class="col-auto">
+                                <label for="cat_id">Category</label>
+                                <select class="form-control" name="cat_id" id="cat_id">
                                 <?php
                                 $query = $pdo->prepare("SELECT * FROM web_blog.categories;");
                                 $query->execute();
@@ -124,19 +129,22 @@ if  (
                                 foreach($categories as $category)
                                 {
                                 ?>
-                                <option value="<?= $category->category_id ?>" <?php if( $category->category_id == $post->category_id) {echo 'selected';} ?>><?= $category->category_name ?></option>
+                                    <option value="<?= $category->category_id ?>" <?php if( $category->category_id == $post->category_id) {echo 'selected';} ?>><?= $category->category_name ?></option>
                                 <?php
                                 }
                                 ?>
-                            </select>
-                        </select>
+                                </select>
+                            </div>
                         </section>
-                        <section class="form-group">
+                        <section class="form-group my-3">
                             <label for="body">Body</label>
-                            <textarea class="form-control" name="body" id="body" rows="5" placeholder="body ..."><?= htmlspecialchars($post->post_body) ?></textarea>
+                            <div class="w-50">
+                                <textarea class="form-control" name="body" id="body" rows="5" placeholder="body ..."><?= htmlspecialchars($post->post_body) ?></textarea>
+                            </div>
                         </section>
-                        <section class="form-group">
+                        <section class="form-group mt-3">
                             <button type="submit" class="btn btn-primary">Update</button>
+                            <a class="btn btn-danger" href="<?= url('panel/posts') ?>">Cancel</a>
                         </section>
                     </form>
 

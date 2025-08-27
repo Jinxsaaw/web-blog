@@ -60,32 +60,41 @@ if (
             </section>
             <section class="col-md-10 pt-3">
                 <form action="<?= url("/panel/posts/create.php") ?>" method="post" enctype="multipart/form-data">
-                    <section class="form-group">
-                        <label for="title">Title</label>
-                        <input type="text" class="form-control" name="title" id="title" placeholder="title ...">
+                    <section class="form-group row my-3">
+                        <div class="col-auto">
+                            <label for="title">Title</label>
+                            <input type="text" class="form-control" name="title" id="title" placeholder="title ...">
+                        </div>
                     </section>
-                    <section class="form-group">
-                        <label for="image">Image</label>
-                        <input type="file" class="form-control" name="image" id="image">
+                    <section class="form-group row my-3">
+                        <div class="col-auto">
+                            <label for="image">Image</label>
+                            <input type="file" class="form-control" name="image" id="image">
+                        </div>
                     </section>
-                    <section class="form-group">
-                        <label for="cat_id">Category</label>
-                        <select class="form-control" name="cat_id" id="cat_id">
-                            <?php $query = $pdo->prepare("SELECT * FROM categories;");
-                            $query->execute();
-                            $categories = $query->fetchAll();
-                            foreach($categories as $category) {
-                            ?>
-                            <option value="<?= $category->category_id ?>"> <?= $category->category_name ?></option>
-                            <?php } ?>
-                        </select>
-                    </section>
-                    <section class="form-group">
+                    <section class="form-group row my-3">
+                        <div class="col-auto">
+                            <label for="cat_id">Category</label>
+                            <select class="form-control" name="cat_id" id="cat_id">
+                                <?php $query = $pdo->prepare("SELECT * FROM categories;");
+                                $query->execute();
+                                $categories = $query->fetchAll();
+                                foreach($categories as $category) {
+                                ?>
+                                <option value="<?= $category->category_id ?>"> <?= $category->category_name ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </section>                    
+                    <section class="form-group my-3">
                         <label for="body">Body</label>
+                        <div class="w-50">
                         <textarea class="form-control" name="body" id="body" rows="5" placeholder="body ..."></textarea>
+                        </div>
                     </section>
-                    <section class="form-group">
+                    <section class="form-group mt-3">
                         <button type="submit" class="btn btn-primary">Create</button>
+                        <a class="btn btn-danger" href="<?= url('panel/posts') ?>">Cancel</a>
                     </section>
                 </form>
 

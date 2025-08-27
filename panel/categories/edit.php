@@ -59,12 +59,15 @@ if(isset($_POST['category_name']) && !empty($_POST['category_name']))
                 <section class="col-md-10 pt-3">
 
                     <form action="<?= url('panel/categories/edit.php?cat_id=' . $category->category_id) ?>" method="post">
-                        <section class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" name="category_name" id="name" value="<?= htmlspecialchars($category->category_name, ENT_QUOTES, 'UTF-8') ?>" required>
+                        <section class="form-group row">
+                            <div class="col-auto">
+                                <label for="name">Category :</label>
+                                <input type="text" class="form-control" name="category_name" id="name" value="<?= htmlspecialchars($category->category_name, ENT_QUOTES, 'UTF-8') ?>" required>
+                            </div>
                         </section>
                         <section class="form-group">
                             <button type="submit" class="btn btn-primary">Update</button>
+                            <a class="btn btn-danger mr-10" href="<?= url('panel/categories') ?>">Cancel</a>
                         </section>
 
                     </form>

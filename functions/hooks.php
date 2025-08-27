@@ -1,6 +1,7 @@
 <?php 
 if (!defined('APP_GUARD'))
 {
+    redirect('');
     die('Direct access is forbidden!');
 }
 

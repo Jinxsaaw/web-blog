@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
         }
         if ( !preg_match($specialCharPattern, $_POST['password']) )
         {
-            array_push($errors, "Password must contain at least one special character. (e.g., !@#$%^&*)");
+            array_push($errors, "Password must contain at least one special character. (e.g., !@#$%^&* )");
         }
         if ( $email )
         {
@@ -141,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
                     </section>
                     <section class="mt-4 mb-2 d-flex justify-content-between">
                         <input type="submit" class="btn btn-success btn-sm" value="register">
-                        <a class="" href="">Sign Up</a>
+                        <a class="" href="<?= url('auth/login.php') ?>">Already have an account?</a>
                     </section>
                 </form>
             </section>
