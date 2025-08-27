@@ -8,25 +8,29 @@ require_once '../functions/hooks.php';
 require_once '../functions/pdo_connection.php';
 GLOBAL $pdo;
 $error = '';
+$email_error = '';
+$password_error = '';
 $errors = [];
 if ( empty($_POST['email']) && empty($_POST['password']) && isset($_POST['email'], $_POST['password']) )
 {
-    array_push($errors, 'Please fill in all the fields!');
+    $errors['fields'] = 'Please fill in all the fields!';
 }
 else
 {
     if ( empty($_POST['email'])  && isset($_POST['email']) )
     {
-        array_push($errors, 'Email is required!');
+        $errors['email'] = 'Email is required!';
     }
     if ( empty($_POST['password'])  && isset($_POST['password']) )
     {
-        array_push($errors, 'Password is required!');
+        $errors['password'] = 'Password is required!';
     }
 }
 if ( !empty($errors) )
 {
-    $error = implode('<br>', $errors);
+    $error = $errors['fields'] ?? NULL;
+    $email_error = $errors['email'] ?? NULL;
+    $password_error = $errors['password'] ?? NULL;
     $errors = [];
 }
 
@@ -83,10 +87,12 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
                     <section class="form-group">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" name="email" id="email" placeholder="email ..." value="<?= isset($_POST['email']) ? $_POST['email'] : '' ?>">
+                        <small class="text-danger"><?= $email_error !== '' ? $email_error : '' ?></small>
                     </section>
                     <section class="form-group">
                         <label for="password">Password</label>
                         <input type="password" class="form-control" name="password" id="password" placeholder="password ..." value="<?= isset($_POST['password']) ? $_POST['password'] : '' ?>">
+                        <small class="text-danger"><?= $password_error !== '' ? $password_error : '' ?></small>
                     </section>
                     <section class="mt-4 mb-2 d-flex justify-content-between">
                         <input type="submit" class="btn btn-success btn-sm" value="Log In">
