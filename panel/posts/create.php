@@ -3,9 +3,10 @@
 define('APP_GUARD', true);
 require_once '../../functions/hooks.php';
 require_once '../../functions/pdo_connection.php';
-require_once '../../functions/check-session.php';
+# We are no longer using sessions for authentication
+# require_once '../../functions/check-session.php'; // Comment out if you want session checks
+require_once '../../functions/check-cookies.php';
 GLOBAL $pdo;
-// This doesn't work! Need to find and fix the bug!
 if (
     isset($_POST['cat_id']) && !empty($_POST['cat_id'])
     && isset($_POST['title']) && !empty($_POST['title'])
@@ -31,8 +32,8 @@ if (
     {
         $image_path = NULL;
     }
-	$query = $pdo->prepare("INSERT INTO web_blog.posts (post_title, post_body, post_image, category_id) VALUES (:title, :body, :image, :cat_id);");
-	$query->execute(['title' => $post_title, 'body' => $post_body, 'image' => $image_path, 'cat_id' => $cat_id]);
+	$query = $pdo->prepare("INSERT INTO web_blog.posts (post_title, post_body, post_image, user_id, category_id) VALUES (:title, :body, :image, :user_id, :cat_id);");
+	$query->execute(['title' => $post_title, 'body' => $post_body, 'image' => $image_path, 'user_id' => $_SESSION['user'], 'cat_id' => $cat_id]);
 	redirect('/panel/posts');
 
 }

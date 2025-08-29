@@ -1,8 +1,7 @@
 <?php
 if (!defined('APP_GUARD'))
 {
-    redirect('');
-    die('Direct access is forbidden!');
+    http_response_code(401);
 }
 session_start();
 require_once 'hooks.php';

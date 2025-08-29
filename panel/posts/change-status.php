@@ -2,7 +2,9 @@
 define('APP_GUARD', true);
 require_once '../../functions/hooks.php';
 require_once '../../functions/pdo_connection.php';
-require_once '../../functions/check-session.php';
+# We are no longer using sessions for authentication
+# require_once '../../functions/check-session.php'; // Comment out if you want session checks
+require_once '../../functions/check-cookies.php';
 
 GLOBAL $pdo;
 

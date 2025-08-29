@@ -1,6 +1,8 @@
 <?php
 define('APP_GUARD', true);
-require_once '../../functions/check-session.php';
+# We are no longer using session checks for authentication
+# require_once '../../functions/check-session.php'; // Commented out to enable session checks
+require_once '../../functions/check-cookies.php'; // New cookie-based authentication with JWT
 require_once '../../functions/hooks.php';
 require_once '../../functions/pdo_connection.php';
 GLOBAL $pdo;
