@@ -123,15 +123,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
     {
         if ( empty($errors) && !$email && $password_check )
         {
-            $query = $pdo->prepare("INSERT INTO web_blog.users SET first_name = :first_name, last_name = :last_name, email = :email, password = :password");
+            // Generate a unique token for the user
+            $token = bin2hex(random_bytes(16)); // Or use UUID
+            $query = $pdo->prepare("INSERT INTO web_blog.users SET first_name = :first_name, last_name = :last_name, email = :email, password = :password, url_token = :url_token");
             $hased_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
             $query->execute([
                 'first_name' => $_POST['first_name'],
                 'last_name' => $_POST['last_name'],
                 'email' => $_POST['email'],
                 'password' => $hased_password,
+                'url_token' => $token
             ]);
-            redirect('auth/login.php');
+            redirect('auth/login.php' . urlencode('You have registered successfully. Please log in.'));
         }
     }
 
