@@ -72,7 +72,7 @@ if  (
             'cat_id' => $_POST['cat_id'],
             'post_id' => $_GET['post_id']
         ]);
-        redirect('panel/posts');
+        redirect('panel/posts' . '?success=post_updated' );
 
     }
     else

@@ -9,12 +9,12 @@ require_once '../../functions/pdo_connection.php';
 GLOBAL $pdo;
 if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category_name']) && !empty($_POST['category_name']))
 {
-    $query = "INSERT INTO web_blog.categories (category_name) VALUES (:category_name)";
+    $query = "INSERT INTO categories (category_name) VALUES (:category_name)";
     $statement = $pdo->prepare($query);
     $statement->execute([
         'category_name' => $_POST['category_name']
     ]);
-    redirect('panel/categories');
+    redirect('panel/categories' . '&category_created=successful');
 }
 # Later add error handling
 // else if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category_name']) && empty($_POST['category_name']))

@@ -3,12 +3,14 @@ define('APP_GUARD', true);
 require_once 'functions/hooks.php';
 require_once 'functions/pdo_connection.php';
 GLOBAL $pdo;
-if ( isset($_GET['cat_id']) && !empty($_GET['cat_id']) ){
+if ( isset($_GET['cat_id']) && !empty($_GET['cat_id']) )
+{
     $cat_id = $_GET['cat_id'];
     $query = $pdo->prepare("SELECT * FROM posts WHERE category_id = :cat_id AND post_status = 1 ORDER BY created_at DESC");
     $query->execute(['cat_id' => $cat_id]);
     $posts = $query->fetchAll();
-} else
+} 
+else
 {
     redirect('');
 }
@@ -51,7 +53,7 @@ if ( isset($_GET['cat_id']) && !empty($_GET['cat_id']) )
                         </section>
                         <h2 class="h5 text-truncate"><?= $post->post_title ?></h2>
                         <p><?= substr($post->post_body, 0, 30) ?></p>
-                        <p><a class="btn btn-primary" href="" role="button">View details »</a></p>
+                        <p><a class="btn btn-primary" href="<?= url('details.php?post_id=' . $post->post_id) ?>" role="button">View details »</a></p>
                     </section>
                     <?php
                        endforeach;

@@ -33,7 +33,7 @@ if (
         $image_path = NULL;
     }
 	$query = $pdo->prepare("INSERT INTO web_blog.posts (post_title, post_body, post_image, user_id, category_id) VALUES (:title, :body, :image, :user_id, :cat_id);");
-	$query->execute(['title' => $post_title, 'body' => $post_body, 'image' => $image_path, 'user_id' => $_SESSION['user'], 'cat_id' => $cat_id]);
+	$query->execute(['title' => $post_title, 'body' => $post_body, 'image' => $image_path, 'user_id' => $decoded->sub, 'cat_id' => $cat_id]);
 	redirect('/panel/posts');
 
 }
