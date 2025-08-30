@@ -53,7 +53,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
         {
             # Create JWT Payload
             $payload = [
-                'iss' => 'your-app',          // Issuer
+                'iss' => 'web-blog',          // Issuer
                 'sub' => $user->user_id,           // Subject (user identifier)
                 'iat' => time(),              // Issued at
                 'exp' => time() + 3600,       // Expires in 1 hour
