@@ -1,6 +1,8 @@
 <?php
 define('APP_GUARD', true);
-require_once '../../functions/check-session.php';
+# We are no longer using sessions for authentication
+# require_once '../../functions/check-session.php'; // Comment out if you want session checks
+require_once '../../functions/check-cookies.php';
 require_once '../../functions/hooks.php';
 require_once '../../functions/pdo_connection.php';
 ?>
@@ -45,9 +47,9 @@ require_once '../../functions/pdo_connection.php';
                         </thead>
                         <tbody>
                             <?php 
-                            $query = "SELECT web_blog.posts.*, web_blog.categories.category_name FROM web_blog.posts LEFT JOIN web_blog.categories ON web_blog.posts.category_id = web_blog.categories.category_id";
+                            $query = "SELECT p.*, c.category_name FROM web_blog.posts p LEFT JOIN web_blog.categories c ON p.category_id = c.category_id WHERE p.user_id = :user_id;";
                             $statement = $pdo->prepare($query);
-                            $statement->execute();
+                            $statement->execute(['user_id' => $decoded->sub]);
                             $posts = $statement->fetchAll();
                             foreach($posts as $post) {
                             ?>

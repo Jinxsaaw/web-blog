@@ -1,12 +1,15 @@
 <?php
-#later create a top-nav to go to home page
 define('APP_GUARD', true);
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+# We no longer use sessions for authentication
+// if (session_status() === PHP_SESSION_NONE) {
+//     session_start();
+// }
 require_once '../functions/hooks.php';
 require_once '../functions/pdo_connection.php';
+require_once '../functions/jwt_config.php';
 GLOBAL $pdo;
+GLOBAL $secretKey;
+use Firebase\JWT\JWT;
 $error = '';
 $email_error = '';
 $password_error = '';
@@ -48,8 +51,29 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
     {
         if ( password_verify($_POST['password'], $user->password) )
         {
-            $_SESSION['user'] = $user->user_id;
-            redirect('panel');
+            # Create JWT Payload
+            $payload = [
+                'iss' => 'web-blog',          // Issuer
+                'sub' => $user->user_id,           // Subject (user identifier)
+                'iat' => time(),              // Issued at
+                'exp' => time() + 3600,       // Expires in 1 hour
+                'data' => [                   // Custom data
+                    'url_token' => $user->url_token,
+                    'role' => 'admin',
+                    'email' => $user->email
+                ]
+            ];
+            // Generate JWT
+            $jwt = JWT::encode($payload, $secretKey, 'HS256');
+            setcookie('jwt_token', $jwt, [
+                'expires' => time() + 3600, // Match token exp
+                'path' => '/',
+                'secure' => true, // HTTPS only
+                'httponly' => true, // No JS access
+                'samesite' => 'Strict' // CSRF protection
+            ]);
+            $token = $user->url_token;
+            redirect('panel' . urldecode('?id=' . $token));
         }
         else
         {
