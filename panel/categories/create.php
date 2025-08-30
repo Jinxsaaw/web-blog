@@ -14,7 +14,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category_name']) && !e
     $statement->execute([
         'category_name' => $_POST['category_name']
     ]);
-    redirect('panel/categories' . '&category_created=successful');
+    redirect('panel/categories' . '?category_created=successful');
 }
 # Later add error handling
 // else if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category_name']) && empty($_POST['category_name']))

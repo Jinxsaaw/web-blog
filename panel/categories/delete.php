@@ -9,20 +9,20 @@ require_once '../../functions/pdo_connection.php';
 GLOBAL $pdo;
 if($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['cat_id']) && !empty($_GET['cat_id']))
 {
-    $query = $pdo->prepare("SELECT p.category_id FROM posts p WHERE p.category_id = :category_id");
+    $query = $pdo->prepare("SELECT p.post_id FROM posts p WHERE p.category_id = :category_id");
     $query->execute([
-        'category_id' => $_POST['category_id']
+        'category_id' => $_GET['cat_id']
     ]);
-    $category = $query->fetch();
-    if($category) {
-        redirect('panel/categories' . '&category_delete=failed' . '&reason=category_in_use');
+    $posts = $query->fetchAll();
+    if($posts) {
+        redirect('panel/categories' . '?category_delete=failed' . '&reason=category_in_use');
     }
-    if(!$category) {
+    if(!$posts) {
         $query = $pdo->prepare("DELETE FROM categories WHERE category_id = :category_id");
         $query->execute([
             'category_id' => $_GET['cat_id']
         ]);
-        redirect('panel/categories' . '&category_delete=successful');
+        redirect('panel/categories' . '?category_delete=successful');
     }
 }
 redirect('panel/categories');
