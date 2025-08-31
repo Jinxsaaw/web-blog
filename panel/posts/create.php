@@ -16,14 +16,19 @@ if (
 	$post_body = $_POST['body'];
 	$post_title = $_POST['title'];
 	$cat_id = $_POST['cat_id'];
-    $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
-    $image_mime = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-    if (!in_array($image_mime, $allowed_extensions)) {
-        redirect('/panel/posts/create.php?error=invalid_image_format');
-    }
 	if (isset($_FILES['image']) && $_FILES['image']['error'] == 0)
 	{
 		$image = $_FILES['image'];
+        $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+        $image_mime = pathinfo($image['name'], PATHINFO_EXTENSION);
+        if (!in_array($image_mime, $allowed_extensions)) {
+            if (session_status() == PHP_SESSION_NONE) 
+            {
+                session_start();
+            }
+        $_SESSION['old_post'] = $_POST;
+            redirect('/panel/posts/create.php?error=invalid_image_format');
+        }
         $base_path = dirname(__DIR__, 2);
 		$image_path = '/assets/images/posts/' . pathinfo($image['name'], PATHINFO_FILENAME) . '_' . date("Y_m_d_H_i") . '.' . $image_mime;
 		move_uploaded_file($image['tmp_name'], $base_path . $image_path);
@@ -61,10 +66,17 @@ if (
             </section>
             <section class="col-md-10 pt-3">
                 <form action="<?= url("/panel/posts/create.php") ?>" method="post" enctype="multipart/form-data">
+                <?php
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
+                    $_POST = $_SESSION['old_post'] ?? [];
+                    unset($_SESSION['old_post']);
+                }
+                ?>
                     <section class="form-group row my-3">
                         <div class="col-auto">
                             <label for="title">Title</label>
-                            <input type="text" class="form-control" name="title" id="title" placeholder="title ...">
+                            <input type="text" class="form-control" name="title" id="title" placeholder="title ..." value="<?= $_POST['title'] ?? '' ?>">
                         </div>
                     </section>
                     <section class="form-group row my-3">
@@ -90,7 +102,7 @@ if (
                     <section class="form-group my-3">
                         <label for="body">Body</label>
                         <div class="w-50">
-                        <textarea class="form-control" name="body" id="body" rows="5" placeholder="body ..."></textarea>
+                        <textarea class="form-control" name="body" id="body" rows="5" placeholder="body ..."><?= $_POST['body'] ?? '' ?></textarea>
                         </div>
                     </section>
                     <section class="form-group mt-3">
