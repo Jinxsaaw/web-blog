@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
         if ( empty($errors) && !$email && $password_check )
         {
             // Generate a unique token for the user
-            $token = bin2hex(random_bytes(16)); // Or use UUID
+            $url_token = bin2hex(random_bytes(16)); // Or use UUID
             $query = $pdo->prepare("INSERT INTO web_blog.users SET first_name = :first_name, last_name = :last_name, email = :email, password = :password, url_token = :url_token");
             $hased_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
             $query->execute([
@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
                 'last_name' => $_POST['last_name'],
                 'email' => $_POST['email'],
                 'password' => $hased_password,
-                'url_token' => $token
+                'url_token' => $url_token
             ]);
             redirect('auth/login.php' . urlencode('You have registered successfully. Please log in.'));
         }
@@ -160,6 +160,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
                 <h1 class="bg-warning rounded-top px-2 mb-0 py-3 h5">Create a New Account</h1>
                 <section class="bg-light my-0 px-2"><small class="text-danger"><?= $error !== NULL ?  $error : '' ?></small></section>
                 <form class="pt-3 pb-1 px-2 bg-light rounded-bottom" action="<?= url('/auth/register.php') ?>" method="post">
+                    <?php $csfr_token = generateCsfrToken('register-form'); ?>
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csfr_token); ?>">
                     <section class="form-group">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" name="email" id="email" placeholder="email ..." value="<?= isset($_POST['email']) ? $_POST['email'] : '' ?>">

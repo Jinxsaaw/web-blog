@@ -1,12 +1,12 @@
 <?php
 define('APP_GUARD', true);
-# We no longer use sessions for authentication
-// if (session_status() === PHP_SESSION_NONE) {
-//     session_start();
-// }
-require_once '../functions/hooks.php';
-require_once '../functions/pdo_connection.php';
-require_once '../functions/jwt_config.php';
+# We no longer use sessions for authentication but we do use it for CSRF protection
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once __DIR__ . '/../functions/hooks.php';
+require_once __DIR__ . '/../functions/pdo_connection.php';
+require_once __DIR__ . '/../functions/jwt_config.php';
 GLOBAL $pdo;
 GLOBAL $secretKey;
 use Firebase\JWT\JWT;
@@ -42,19 +42,29 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
     !empty($_POST['email']) && !empty($_POST['password'])
     )
 {
+    $Input_email = sanitizeInput($_POST['email']);
+    $Input_password = sanitizeInput($_POST['password']);
+    if ( !isset($_POST['csfr_token']) || !verifyCsfrToken('login-form', $_POST['csfr_token']) )
+    {
+        $error = 'Invalid CSFR token!';
+        unset($_SESSION['csfr_tokens']);
+        // Stop further processing
+        return;
+    }
+
     $query = $pdo->prepare("SELECT * FROM web_blog.users WHERE email = :email");
     $query->execute([
-        'email' => $_POST['email']
+        'email' => $Input_email
     ]);
     $user = $query->fetch();
     if ( $user )
     {
-        if ( password_verify($_POST['password'], $user->password) )
+        if ( password_verify($Input_password, $user->password) )
         {
             # Create JWT Payload
             $payload = [
                 'iss' => 'web-blog',          // Issuer
-                'sub' => $user->user_id,           // Subject (user identifier)
+                'sub' => $user->user_id,      // Subject (user identifier)
                 'iat' => time(),              // Issued at
                 'exp' => time() + 3600,       // Expires in 1 hour
                 'data' => [                   // Custom data
@@ -72,8 +82,9 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
                 'httponly' => true, // No JS access
                 'samesite' => 'Strict' // CSRF protection
             ]);
-            $token = $user->url_token;
-            redirect('panel' . urldecode('?id=' . $token));
+            $url_token = $user->url_token;
+            redirect('panel?token=' . urldecode($url_token));
+            // redirect('panel' . $token);
         }
         else
         {
@@ -107,7 +118,9 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
             <section style="width: 20rem;">
                 <h1 class="bg-warning rounded-top px-2 mb-0 py-3 h5">Admin login</h1>
                 <section class="bg-light my-0 px-2"><small class="text-danger"><?= $error !== '' ? $error : '' ?></small></section>
-                <form class="pt-3 pb-1 px-2 bg-light rounded-bottom" action="<?= url('auth/login.php') ?>" method="post">
+                <form class="pt-3 pb-1 px-2 bg-light rounded-bottom" action="<?= htmlspecialchars(url('auth/login.php')) ?>" method="post">
+                    <?php $loginToken = generateCsfrToken('login-form'); ?>
+                    <input type="hidden" name="csfr_token" id="csfr_token" value="<?= htmlspecialchars($loginToken) ?>">
                     <section class="form-group">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" name="email" id="email" placeholder="email ..." value="<?= isset($_POST['email']) ? $_POST['email'] : '' ?>">

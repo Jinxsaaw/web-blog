@@ -94,7 +94,7 @@ if (
                                 $categories = $query->fetchAll();
                                 foreach($categories as $category) {
                                 ?>
-                                <option value="<?= $category->category_id ?>"> <?= $category->category_name ?></option>
+                                <option value="<?= $category->category_id ?>" <?php if($category->category_id == $_POST['cat_id']) {echo "selected";} ?> > <?= $category->category_name ?></option>
                                 <?php } ?>
                             </select>
                         </div>

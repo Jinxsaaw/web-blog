@@ -31,7 +31,56 @@ function dd($var)
     die();
 }
 
+# Generate a CSRF token for a specific form
+function generateCsfrToken($formId)
+{
+    if (session_status() === PHP_SESSION_NONE)
+    {
+        session_start();
+    }
+    $token = bin2hex(random_bytes(32));
+    $_SESSION['csfr_tokens'][$formId] = $token;
+    return $token;
+}
 
+# Validate a CSRF token for a specific form
+function verifyCsfrToken($formId, $token)
+{
+    if (!isset($_SESSION['csfr_tokens'][$formId]) || !is_string($token) )
+    {
+        return false;
+    }
+    $isValid = hash_equals($_SESSION['csfr_tokens'][$formId], $token);
+    unset($_SESSION['csfr_tokens'][$formId]); // Token can be used only once
+    return $isValid;
+}
+
+# XCCE Protection
+// function sanitizeOutput($buffer)
+// {
+//     $search = [
+//         '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
+//         '/[^\S ]+\</s',     // strip whitespaces before tags, except space
+//         '/(\s)+/s',         // shorten multiple whitespace sequences
+//         '/<!--(.|\s)*?-->/' // Remove HTML comments
+//     ];
+//     $replace = [
+//         '>',
+//         '<',
+//         '\\1',
+//         ''
+//     ];
+//     $buffer = preg_replace($search, $replace, $buffer);
+//     return $buffer;
+// }
+
+function sanitizeInput($data)
+{
+    $data = trim($data);
+    $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+    $data = stripslashes($data);
+    return $data;
+}
 
 
 
