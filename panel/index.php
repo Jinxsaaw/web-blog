@@ -10,10 +10,10 @@ require_once '../functions/check-cookies.php';
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" type="image/png+xml" href="<?= assets('assets/images/icons/home.png') ?>" />
+        <link rel="icon" type="image/png+xml" href="<?= htmlspecialchars(assets('assets/images/icons/home.png')) ?>" />
         <title>Admin Panel</title>
-        <link rel="stylesheet" href="<?= assets('assets/css/bootstrap.min.css') ?>" media="all" type="text/css">
-        <link rel="stylesheet" href="<?= assets('assets/css/style.css') ?>" media="all" type="text/css">
+        <link rel="stylesheet" href="<?= htmlspecialchars(assets('assets/css/bootstrap.min.css')) ?>" media="all" type="text/css">
+        <link rel="stylesheet" href="<?= htmlspecialchars(assets('assets/css/style.css')) ?>" media="all" type="text/css">
     </head>
     <body>
         <section id="app">
@@ -47,7 +47,7 @@ require_once '../functions/check-cookies.php';
 
         </section>
 
-        <script src="<?= assets('assets/js/jquery.min.js') ?>"></script>
-        <script src="<?= assets('assets/js/bootstrap.min.js') ?>"></script>
+        <script src="<?= htmlspecialchars(assets('assets/js/jquery.min.js')) ?>"></script>
+        <script src="<?= htmlspecialchars(assets('assets/js/bootstrap.min.js')) ?>"></script>
     </body>
 </html>

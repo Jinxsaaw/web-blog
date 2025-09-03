@@ -37,7 +37,7 @@ if (!defined('APP_GUARD'))
     <section class="d-inline ">
 
         <?php
-            if( !isset($_SESSION['user']) ):
+            if( !isset($_COOKIE['jwt_token']) ):
         
         ?>
         <a class="text-decoration-none text-white px-2 " href="<?= url('auth/register.php') ?>">Register</a>

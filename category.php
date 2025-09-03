@@ -17,9 +17,13 @@ else
 if ( isset($_GET['cat_id']) && !empty($_GET['cat_id']) )
 {
     $cat_id = $_GET['cat_id'];
-    $query = $pdo->prepare("SELECT * FROM categories WHERE category_id = :cat_id");
+    $query = $pdo->prepare("SELECT c.category_name AS cn FROM categories c WHERE c.category_id = :cat_id");
     $query->execute(['cat_id' => $cat_id]);
     $category = $query->fetch();
+    if ( !$category )
+    {
+        redirect('');
+    }
 }
 
 ?>
@@ -28,10 +32,10 @@ if ( isset($_GET['cat_id']) && !empty($_GET['cat_id']) )
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" type="image/png+xml" href="<?= assets('assets/images/icons/home.png') ?>" />
-        <title><?= $category->category_name ?> Posts</title>
-        <link rel="stylesheet" href="<?= assets('assets/css/bootstrap.min.css') ?>" media="all" type="text/css">
-        <link rel="stylesheet" href="<?= assets('assets/css/style.css') ?>" media="all" type="text/css">
+        <link rel="icon" type="image/png+xml" href="<?= htmlspecialchars(assets('assets/images/icons/home.png')) ?>" />
+        <title><?= isset($category->cn) ? htmlspecialchars($category->cn) : "Unknown Category" ?> Posts</title>
+        <link rel="stylesheet" href="<?= htmlspecialchars(assets('assets/css/bootstrap.min.css')) ?>" media="all" type="text/css">
+        <link rel="stylesheet" href="<?= htmlspecialchars(assets('assets/css/style.css')) ?>" media="all" type="text/css">
     </head>
     <body>
         <section id="app"> 
@@ -39,7 +43,7 @@ if ( isset($_GET['cat_id']) && !empty($_GET['cat_id']) )
             <section class="container my-5"> 
                 <section class="row">
                     <section class="col-12">
-                        <h1><?= $category->category_name ?></h1>
+                        <h1><?= isset($category->cn) ? htmlspecialchars($category->cn) : "Unknown Category" ?></h1>
                         <hr>
                     </section>
                 </section> 
@@ -49,11 +53,11 @@ if ( isset($_GET['cat_id']) && !empty($_GET['cat_id']) )
                     ?>
                     <section class="col-md-4">
                         <section class="mb-2 overflow-hidden" style="max-height: 15rem;">
-                            <img class="img-fluid" src="<?= assets($post->post_image); ?>" alt="<?= $post->post_image ?>">
+                            <img class="img-fluid" src="<?= htmlspecialchars(assets($post->post_image)); ?>" alt="<?= htmlspecialchars($post->post_image) ?>">
                         </section>
                         <h2 class="h5 text-truncate"><?= $post->post_title ?></h2>
                         <p><?= substr($post->post_body, 0, 30) ?></p>
-                        <p><a class="btn btn-primary" href="<?= url('details.php?post_id=' . $post->post_id) ?>" role="button">View details »</a></p>
+                        <p><a class="btn btn-primary" href="<?= htmlspecialchars(url('details.php?post_id=' . $post->post_id)) ?>" role="button">View details »</a></p>
                     </section>
                     <?php
                        endforeach;
@@ -73,7 +77,7 @@ if ( isset($_GET['cat_id']) && !empty($_GET['cat_id']) )
             </section>
 
         </section>
-        <script src="<?= assets('assets/js/jquery.min.js') ?>"></script>
-        <script src="<?= assets('assets/js/bootstrap.min.js') ?>"></script>
+        <script src="<?= htmlspecialchars(assets('assets/js/jquery.min.js')) ?>"></script>
+        <script src="<?= htmlspecialchars(assets('assets/js/bootstrap.min.js')) ?>"></script>
     </body>
 </html>

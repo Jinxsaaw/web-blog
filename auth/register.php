@@ -1,8 +1,8 @@
 <?php
 define('APP_GUARD', true);
-require_once '../functions/hooks.php';
-require_once '../functions/pdo_connection.php';
-#later make an assoc array for all different errors and write the warning under the input inside small tag!;
+require_once __DIR__ .  '/../functions/hooks.php';
+require_once __DIR__ . '/../functions/pdo_connection.php';
+
 $error = NULL;
 $email_error = NULL;
 $first_name_error = NULL;
@@ -44,22 +44,36 @@ else
         $errors['confirm'] = 'Confirming your password is required!';
     }
 }
-if(isset($_POST['email']) && !empty($_POST['email'])) // done
+if( isset($_POST['email']) && !empty($_POST['email']) ) // done
 {
-    if ( !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) )
+    $input_email = trim($_POST['email']);
+    if ( !filter_var($input_email, FILTER_VALIDATE_EMAIL) )
     {
         $errors['email'] = 'Please enter a valid email address!';
     }
     $query = $pdo->prepare("SELECT * FROM web_blog.users WHERE email = :email");
-    $query->execute(['email' => $_POST['email']]);
+    $query->execute(['email' => $input_email]);
     $email = $query->fetch();
     if ( $email )
     {
         $errors['email'] = "This email is already registered.";
     }
 }
-if (!empty($_POST['password']) && isset($_POST['password']) ) // not done
+if ( !empty($_POST['first_name']) && isset($_POST['first_name']) ) // done
 {
+    $input_first_name = trim($_POST['first_name']);
+    // At least 3 characters, only letters, numbers, and underscores
+    !preg_match('/^[a-zA-Z0-9_]{3,20}$/', $input_first_name) ? $errors['first_name'] = "First name must be 3-20 characters long and can only contain letters, numbers, and underscores.\n" : NULL;
+}
+if ( !empty($_POST['last_name']) && isset($_POST['last_name']) ) // done
+{
+    $input_last_name = trim($_POST['last_name']);
+    // At least 3 characters, only letters, numbers, and underscores
+    !preg_match('/^[a-zA-Z0-9_]{3,20}$/', $input_last_name) ? $errors['last_name'] = "Last name must be 3-20 characters long and can only contain letters, numbers, and underscores.\n" : NULL;
+}
+if ( !empty($_POST['password']) && isset($_POST['password']) ) // done
+{
+    $input_password = trim($_POST['password']);
     // Define regex patterns for each password requirement
     $minLengthPattern = '/^.{8,}$/'; // At least 8 characters
     $uppercasePattern = '/[A-Z]/';   // At least one uppercase letter
@@ -68,39 +82,40 @@ if (!empty($_POST['password']) && isset($_POST['password']) ) // not done
     $specialCharPattern = '/[!@#$%^&*]/'; // At least one special character in the ones I've written (not a letter or digit)
 
     # Check each requirement and add error messages if not met
-    if( !preg_match($minLengthPattern, $_POST['password']) )
+    if( !preg_match($minLengthPattern, $input_password) )
     {
         $errors['minLength'] = "Password must be at least 8 characters long.\n";
     }
-    if ( !preg_match($uppercasePattern, $_POST['password']) )
+    if ( !preg_match($uppercasePattern, $input_password) )
     {
         $errors['uppercase'] = "Password must contain at least one uppercase letter.\n";
     }
-    if ( !preg_match($lowercasePattern, $_POST['password']) )
+    if ( !preg_match($lowercasePattern, $input_password) )
     {
         $errors['lowercase'] = "Password must contain at least one lowercase letter.\n";
     }
-    if ( !preg_match($numberPattern, $_POST['password']) )
+    if ( !preg_match($numberPattern, $input_password) )
     {
         $errors['number'] = "Password must contain at least one number.\n";
     }
-    if ( !preg_match($specialCharPattern, $_POST['password']) )
+    if ( !preg_match($specialCharPattern, $input_password) )
     {
         $errors['specialChar'] = "Password must contain at least one special character. (e.g., !@#$%^&* )\n";
     }
 }
-if (!empty($_POST['confirm']) && isset($_POST['confirm'])) // done
+if ( !empty($_POST['confirm']) && isset($_POST['confirm']) ) // done
 {
-    $password_check = $_POST['password'] === $_POST['confirm'];
-    if ( isset($_POST['password']) && empty($_POST['password']) )
+    $input_confirm = trim($_POST['confirm']);
+    $password_check = $input_password === $input_confirm;
+    if ( isset($input_password) && empty($input_password) )
     {
-        $errors['confirm'] = 'Please enter your password first.\n';
-    } else if ( isset($_POST['password']) && !empty($_POST['password']) && !$password_check )
+        $errors['confirm'] = "Please enter your password first.\n";
+    } else if ( isset($input_password) && !empty($input_password) && !$password_check )
     {
         $errors['confirm'] = "Password and confirm password do not match.\n";
     }
 }
-if (!empty($errors))
+if ( !empty($errors) )
 {
     $error = $errors['fields'] ?? NULL;
     $email_error =  $errors['email'] ?? NULL;
@@ -115,26 +130,32 @@ if (!empty($errors))
     $confirm_error =  $errors['confirm'] ?? NULL;
     $errors = [];
 }
-if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
-    isset($_POST['email'], $_POST['first_name'], $_POST['last_name'], $_POST['password'], $_POST['confirm']) &&
-    !empty($_POST['email']) && !empty($_POST['first_name']) && !empty($_POST['last_name']) &&
-    !empty($_POST['password']) && !empty($_POST['confirm'])
+if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
+    isset($input_email, $input_first_name, $input_last_name, $input_password, $input_confirm) &&
+    !empty($input_email) && !empty($input_first_name) && !empty($input_last_name) &&
+    !empty($input_password) && !empty($input_confirm)
     )
     {
+        if ( !verifyCsfrToken('register-form', $_POST['csrf_token']) )
+        {
+            unset($_SESSION['csfr_tokens']);
+            // Stop further processing
+            die('Invalid CSRF token!');
+        }
         if ( empty($errors) && !$email && $password_check )
         {
             // Generate a unique token for the user
             $url_token = bin2hex(random_bytes(16)); // Or use UUID
-            $query = $pdo->prepare("INSERT INTO web_blog.users SET first_name = :first_name, last_name = :last_name, email = :email, password = :password, url_token = :url_token");
-            $hased_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            $query = $pdo->prepare("INSERT INTO `users` SET `first_name` = :first_name, `last_name` = :last_name, `email` = :email, `password` = :password, `url_token` = :url_token");
+            $hased_password = password_hash($input_password, PASSWORD_DEFAULT);
             $query->execute([
-                'first_name' => $_POST['first_name'],
-                'last_name' => $_POST['last_name'],
-                'email' => $_POST['email'],
+                'first_name' => $input_first_name,
+                'last_name' => $input_last_name,
+                'email' => $input_email,
                 'password' => $hased_password,
                 'url_token' => $url_token
             ]);
-            redirect('auth/login.php' . urlencode('You have registered successfully. Please log in.'));
+            redirect('auth/login.php?reg_com=' . urlencode('You have registered successfully. Please log in.'));
         }
     }
 
@@ -145,10 +166,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png+xml" href="<?= assets('assets/images/icons/home.png') ?>" />
+    <link rel="icon" type="image/png+xml" href="<?= htmlspecialchars(assets('assets/images/icons/home.png')) ?>" />
     <title>Sign up</title>
-    <link rel="stylesheet" href="<?= assets('assets/css/bootstrap.min.css') ?>" media="all" type="text/css">
-    <link rel="stylesheet" href="<?= assets('assets/css/style.css') ?>" media="all" type="text/css">
+    <link rel="stylesheet" href="<?= htmlspecialchars(assets('assets/css/bootstrap.min.css')) ?>" media="all" type="text/css">
+    <link rel="stylesheet" href="<?= htmlspecialchars(assets('assets/css/style.css')) ?>" media="all" type="text/css">
 </head>
 
 <body>
@@ -159,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
             <section style="width: 20rem;">
                 <h1 class="bg-warning rounded-top px-2 mb-0 py-3 h5">Create a New Account</h1>
                 <section class="bg-light my-0 px-2"><small class="text-danger"><?= $error !== NULL ?  $error : '' ?></small></section>
-                <form class="pt-3 pb-1 px-2 bg-light rounded-bottom" action="<?= url('/auth/register.php') ?>" method="post">
+                <form class="pt-3 pb-1 px-2 bg-light rounded-bottom" action="<?= htmlspecialchars(url('/auth/register.php')) ?>" method="post">
                     <?php $csfr_token = generateCsfrToken('register-form'); ?>
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csfr_token); ?>">
                     <section class="form-group">
@@ -189,15 +210,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
                     </section>
                     <section class="mt-4 mb-2 d-flex justify-content-between">
                         <input type="submit" class="btn btn-success btn-sm" value="register">
-                        <a class="btn btn-info btn-sm" href="<?= url('auth/login.php') ?>">Already have an account?</a>
+                        <a class="btn btn-info btn-sm" href="<?= htmlspecialchars(url('auth/login.php')) ?>">Already have an account?</a>
                     </section>
                 </form>
             </section>
         </section>
 
     </section>
-<script src="<?= assets('assets/js/jquery.min.js') ?>"></script>
-<script src="<?= assets('assets/js/bootstrap.min.js') ?>"></script>
+<script src="<?= htmlspecialchars(assets('assets/js/jquery.min.js')) ?>"></script>
+<script src="<?= htmlspecialchars(assets('assets/js/bootstrap.min.js')) ?>"></script>
 </body>
 
 </html>

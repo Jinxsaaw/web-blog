@@ -16,10 +16,10 @@ if ( $_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['post_id']) && !empty($_
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" type="image/png+xml" href="<?= assets('assets/images/icons/home.png') ?>" />
+        <link rel="icon" type="image/png+xml" href="<?= htmlspecialchars(assets('assets/images/icons/home.png')) ?>" />
         <title>Post Details</title>
-        <link rel="stylesheet" href="<?= assets('assets/css/bootstrap.min.css') ?>" media="all" type="text/css">
-        <link rel="stylesheet" href="<?= assets('assets/css/style.css') ?>" media="all" type="text/css">
+        <link rel="stylesheet" href="<?= htmlspecialchars(assets('assets/css/bootstrap.min.css')) ?>" media="all" type="text/css">
+        <link rel="stylesheet" href="<?= htmlspecialchars(assets('assets/css/style.css')) ?>" media="all" type="text/css">
     </head>
     <body>
     <section id="app">
@@ -33,10 +33,10 @@ if ( $_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['post_id']) && !empty($_
                 ?>
                     <h1><?= $post->post_title ?></h1>
                     <h5 class="d-flex justify-content-between align-items-center">
-                        <a href="<?= url('category.php?cat_id=' . $post->category_id) ?>"><?= $post->cn ?></a>
+                        <a href="<?= htmlspecialchars(url('category.php?cat_id=' . $post->category_id)) ?>"><?= $post->cn ?></a>
                         <span class="date-time"><?= $post->created_at ?></span>
                     </h5>
-                    <article class="bg-article p-3"><img class="float-right mb-2 ml-2" style="width: 18rem;" src="<?= assets($post->post_image) ?>" alt=""><?= $post->post_body ?></article>
+                    <article class="bg-article p-3"><img class="float-right mb-2 ml-2" style="width: 18rem;" src="<?= htmlspecialchars(assets($post->post_image)) ?>" alt="<?= htmlspecialchars(assets($post->post_image)) ?>"><?= htmlspecialchars($post->post_body) ?></article>
                 <?php
                     else:
                 ?>
@@ -49,7 +49,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['post_id']) && !empty($_
         </section>
 
     </section>
-        <script src="<?= assets('assets/js/jquery.min.js') ?>"></script>
-        <script src="<?= assets('assets/js/bootstrap.min.js') ?>"></script>
+        <script src="<?= htmlspecialchars(assets('assets/js/jquery.min.js')) ?>"></script>
+        <script src="<?= htmlspecialchars(assets('assets/js/bootstrap.min.js')) ?>"></script>
     </body>
 </html>

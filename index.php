@@ -34,7 +34,7 @@ GLOBAL $pdo;
                         <section class="col-md-4">
                             <section class="mb-2 overflow-hidden" style="max-height: 15rem;"><img class="img-fluid" src="<?= assets($post->post_image) ?>" alt="<?= $post->post_image ?>"></section>
                             <h2 class="h5 text-truncate"><?= $post->post_title ?></h2>
-                            <p><?= substr($post->post_body, 0, 30) ?></p>
+                            <p><?= strlen($post->post_body) > 30 ? substr($post->post_body, 0, 30) . "..." : substr($post->post_body, 0, 30) ?></p>
                             <p><a class="btn btn-primary" href="<?= url('details.php?post_id=' . $post->post_id) ?>" role="button">View details »</a></p>
                         </section>
                     <?php   

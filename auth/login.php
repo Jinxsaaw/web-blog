@@ -46,13 +46,12 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
     $Input_password = sanitizeInput($_POST['password']);
     if ( !isset($_POST['csfr_token']) || !verifyCsfrToken('login-form', $_POST['csfr_token']) )
     {
-        $error = 'Invalid CSFR token!';
         unset($_SESSION['csfr_tokens']);
         // Stop further processing
-        return;
+        die('Invalid CSFR token!');
     }
 
-    $query = $pdo->prepare("SELECT * FROM web_blog.users WHERE email = :email");
+    $query = $pdo->prepare("SELECT * FROM users WHERE email = :email");
     $query->execute([
         'email' => $Input_email
     ]);
@@ -104,10 +103,10 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png+xml" href="<?= assets('assets/images/icons/home.png') ?>" />
+    <link rel="icon" type="image/png+xml" href="<?= htmlspecialchars(assets('assets/images/icons/home.png')) ?>" />
     <title>Admin Login</title>
-    <link rel="stylesheet" href="<?= assets('assets/css/bootstrap.min.css') ?>" media="all" type="text/css">
-    <link rel="stylesheet" href="<?= assets('assets/css/style.css') ?>" media="all" type="text/css">
+    <link rel="stylesheet" href="<?= htmlspecialchars(assets('assets/css/bootstrap.min.css')) ?>" media="all" type="text/css">
+    <link rel="stylesheet" href="<?= htmlspecialchars(assets('assets/css/style.css')) ?>" media="all" type="text/css">
 </head>
 
 <body>
@@ -133,15 +132,15 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
                     </section>
                     <section class="mt-4 mb-2 d-flex justify-content-between">
                         <input type="submit" class="btn btn-success btn-sm" value="Log In">
-                        <a class="btn btn-info btn-sm" href="<?= url('auth/register.php') ?>">Create a New Account</a>
+                        <a class="btn btn-info btn-sm" href="<?= htmlspecialchars(url('auth/register.php')) ?>">Create a New Account</a>
                     </section>
                 </form>
             </section>
         </section>
 
     </section>
-    <script src="<?= assets('assets/js/jquery.min.js') ?>"></script>
-    <script src="<?= assets('assets/js/bootstrap.min.js') ?>"></script>
+    <script src="<?= htmlspecialchars(assets('assets/js/jquery.min.js')) ?>"></script>
+    <script src="<?= htmlspecialchars(assets('assets/js/bootstrap.min.js')) ?>"></script>
 </body>
 
 </html>
