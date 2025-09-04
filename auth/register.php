@@ -200,12 +200,20 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
                     </section>
                     <section class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" class="form-control" name="password" id="password" placeholder="password ..." value="<?= isset($_POST['password']) ? $_POST['password'] : '' ?>">
+                        <div class="d-flex align-items-center">
+                            <input type="password" class="form-control" name="password" id="password" placeholder="password ..." value="<?= isset($_POST['password']) ? $_POST['password'] : '' ?>">
+                            <img src="<?= htmlspecialchars(assets('assets/icons/eye.svg')) ?>" alt="" class="ml-2" id="togglePassword" style="cursor: pointer; width: 20px; height: 20px;">
+                            <img src="<?= htmlspecialchars(assets('assets/icons/eye-slash.svg')) ?>" alt="" class="ml-2 d-none" id="toggleBackPassword" style="cursor: pointer; width: 20px; height: 20px;">
+                        </div>
                         <small class="text-danger"><?= $password_error !== NULL ?  $password_error : '' ?></small>
                     </section>
                     <section class="form-group">
                         <label for="confirm">Confirm</label>
-                        <input type="password" class="form-control" name="confirm" id="confirm" placeholder="confirm ..." value="<?= isset($_POST['confirm']) && !empty($_POST['password']) ? $_POST['confirm'] : '' ?>">
+                        <div class="d-flex align-items-center">
+                            <input type="password" class="form-control" name="confirm" id="confirm" placeholder="confirm ..." value="<?= isset($_POST['confirm']) && !empty($_POST['password']) ? $_POST['confirm'] : '' ?>">
+                            <img src="<?= htmlspecialchars(assets('assets/icons/eye.svg')) ?>" alt="" class="ml-2" id="toggleConfirm" style="cursor: pointer; width: 20px; height: 20px;">
+                            <img src="<?= htmlspecialchars(assets('assets/icons/eye-slash.svg')) ?>" alt="" class="ml-2 d-none" id="toggleBackConfirm" style="cursor: pointer; width: 20px; height: 20px;">
+                        </div>
                         <small class="text-danger"><?= $confirm_error !== NULL ?  $confirm_error : '' ?></small>
                     </section>
                     <section class="mt-4 mb-2 d-flex justify-content-between">
@@ -219,6 +227,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
     </section>
 <script src="<?= htmlspecialchars(assets('assets/js/jquery.min.js')) ?>"></script>
 <script src="<?= htmlspecialchars(assets('assets/js/bootstrap.min.js')) ?>"></script>
+<script src="<?= htmlspecialchars(assets('assets/js/registery-icon.js')) ?>"></script>
 </body>
 
 </html>
