@@ -1,0 +1,12 @@
+#input-error {
+  background-color: #ffe6e6; /* Light reddish background */
+  border: 1px solid #ff6666; /* Reddish border */
+  transition: all 0.3s ease; /* Smooth transition for better UX */
+}
+.error-message {
+  color: #ff3333; /* Red error text */
+  font-size: 0.8em;
+}
+small {
+  margin-left: 5px; /* Space between input and error message */
+}

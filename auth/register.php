@@ -2,7 +2,9 @@
 define('APP_GUARD', true);
 require_once __DIR__ .  '/../functions/hooks.php';
 require_once __DIR__ . '/../functions/pdo_connection.php';
-
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 $error = NULL;
 $email_error = NULL;
 $first_name_error = NULL;
@@ -79,7 +81,8 @@ if ( !empty($_POST['password']) && isset($_POST['password']) ) // done
     $uppercasePattern = '/[A-Z]/';   // At least one uppercase letter
     $lowercasePattern = '/[a-z]/';   // At least one lowercase letter
     $numberPattern = '/\d/';         // At least one digit
-    $specialCharPattern = '/[!@#$%^&*]/'; // At least one special character in the ones I've written (not a letter or digit)
+    $specialCharPattern = '/[!@#$%^&*]/'; // At least one special character from: !@#$%^&*
+    $invalidCharPattern = '/[^a-zA-Z0-9!@#$%^&*]/'; // No invalid characters
 
     # Check each requirement and add error messages if not met
     if( !preg_match($minLengthPattern, $input_password) )
@@ -102,6 +105,10 @@ if ( !empty($_POST['password']) && isset($_POST['password']) ) // done
     {
         $errors['specialChar'] = "Password must contain at least one special character. (e.g., !@#$%^&* )\n";
     }
+    if ( preg_match($invalidCharPattern, $input_password) )
+        {
+            $errors['invalidChar'] = "Password contains invalid characters. Only letters, numbers, and special characters (!@#$%^&*) are allowed.\n";
+        }
 }
 if ( !empty($_POST['confirm']) && isset($_POST['confirm']) ) // done
 {
@@ -127,6 +134,7 @@ if ( !empty($errors) )
     $password_error .=  $errors['lowercase'] ?? NULL;
     $password_error .=  $errors['number'] ?? NULL;
     $password_error .=  $errors['specialChar'] ?? NULL;
+    $password_error .=  $errors['invalidChar'] ?? NULL;
     $confirm_error =  $errors['confirm'] ?? NULL;
     $errors = [];
 }
@@ -136,9 +144,9 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
     !empty($input_password) && !empty($input_confirm)
     )
     {
-        if ( !verifyCsfrToken('register-form', $_POST['csrf_token']) )
+        if ( !verifyCsrfToken('register-form', $_POST['csrf_token']) )
         {
-            unset($_SESSION['csfr_tokens']);
+            unset($_SESSION['csrf_tokens']);
             // Stop further processing
             die('Invalid CSRF token!');
         }
@@ -147,12 +155,12 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
             // Generate a unique token for the user
             $url_token = bin2hex(random_bytes(16)); // Or use UUID
             $query = $pdo->prepare("INSERT INTO `users` SET `first_name` = :first_name, `last_name` = :last_name, `email` = :email, `password` = :password, `url_token` = :url_token");
-            $hased_password = password_hash($input_password, PASSWORD_DEFAULT);
+            $hashed_password = password_hash($input_password, PASSWORD_DEFAULT);
             $query->execute([
                 'first_name' => $input_first_name,
                 'last_name' => $input_last_name,
                 'email' => $input_email,
-                'password' => $hased_password,
+                'password' => $hashed_password,
                 'url_token' => $url_token
             ]);
             redirect('auth/login.php?reg_com=' . urlencode('You have registered successfully. Please log in.'));
@@ -181,8 +189,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
                 <h1 class="bg-warning rounded-top px-2 mb-0 py-3 h5">Create a New Account</h1>
                 <section class="bg-light my-0 px-2"><small class="text-danger"><?= $error !== NULL ?  $error : '' ?></small></section>
                 <form class="pt-3 pb-1 px-2 bg-light rounded-bottom" action="<?= htmlspecialchars(url('/auth/register.php')) ?>" method="post">
-                    <?php $csfr_token = generateCsfrToken('register-form'); ?>
-                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csfr_token); ?>">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generateCsrfToken('register-form')); ?>">
                     <section class="form-group">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" name="email" id="email" placeholder="email ..." value="<?= isset($_POST['email']) ? $_POST['email'] : '' ?>">
@@ -227,7 +234,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
     </section>
 <script src="<?= htmlspecialchars(assets('assets/js/jquery.min.js')) ?>"></script>
 <script src="<?= htmlspecialchars(assets('assets/js/bootstrap.min.js')) ?>"></script>
-<script src="<?= htmlspecialchars(assets('assets/js/registery-icon.js')) ?>"></script>
+<script src="<?= htmlspecialchars(assets('assets/js/registry-icon.js')) ?>"></script>
 </body>
 
 </html>

@@ -44,11 +44,11 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
 {
     $Input_email = sanitizeInput($_POST['email']);
     $Input_password = sanitizeInput($_POST['password']);
-    if ( !isset($_POST['csfr_token']) || !verifyCsfrToken('login-form', $_POST['csfr_token']) )
+    if ( !isset($_POST['csrf_token']) || !verifyCsrfToken('login-form', $_POST['csrf_token']) )
     {
-        unset($_SESSION['csfr_tokens']);
+        unset($_SESSION['csrf_tokens']);
         // Stop further processing
-        die('Invalid CSFR token!');
+        die('Invalid CSRF token!');
     }
 
     $query = $pdo->prepare("SELECT * FROM users WHERE email = :email");
@@ -118,8 +118,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' &&
                 <h1 class="bg-warning rounded-top px-2 mb-0 py-3 h5">Admin login</h1>
                 <section class="bg-light my-0 px-2"><small class="text-danger"><?= $error !== '' ? $error : '' ?></small></section>
                 <form class="pt-3 pb-1 px-2 bg-light rounded-bottom" action="<?= htmlspecialchars(url('auth/login.php')) ?>" method="post">
-                    <?php $loginToken = generateCsfrToken('login-form'); ?>
-                    <input type="hidden" name="csfr_token" id="csfr_token" value="<?= htmlspecialchars($loginToken) ?>">
+                    <input type="hidden" name="csrf_token" id="csrf_token" value="<?= htmlspecialchars(generateCsrfToken('login-form')) ?>">
                     <section class="form-group">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" name="email" id="email" placeholder="email ..." value="<?= isset($_POST['email']) ? $_POST['email'] : '' ?>">

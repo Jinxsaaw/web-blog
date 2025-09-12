@@ -32,30 +32,30 @@ function dd($var)
 }
 
 # Generate a CSRF token for a specific form
-function generateCsfrToken($formId)
+function generateCsrfToken($formId)
 {
     if (session_status() === PHP_SESSION_NONE)
     {
         session_start();
     }
     $token = bin2hex(random_bytes(32));
-    $_SESSION['csfr_tokens'][$formId] = $token;
+    $_SESSION['csrf_tokens'][$formId] = $token;
     return $token;
 }
 
 # Validate a CSRF token for a specific form
-function verifyCsfrToken($formId, $token)
+function verifyCsrfToken($formId, $token)
 {
-    if (!isset($_SESSION['csfr_tokens'][$formId]) || !is_string($token) )
+    if (!isset($_SESSION['csrf_tokens'][$formId]) || !is_string($token) )
     {
         return false;
     }
-    $isValid = hash_equals($_SESSION['csfr_tokens'][$formId], $token);
-    unset($_SESSION['csfr_tokens'][$formId]); // Token can be used only once
+    $isValid = hash_equals($_SESSION['csrf_tokens'][$formId], $token);
+    unset($_SESSION['csrf_tokens'][$formId]); // Token can be used only once
     return $isValid;
 }
 
-# XCCE Protection
+# XSS Protection
 // function sanitizeOutput($buffer)
 // {
 //     $search = [
